@@ -6,6 +6,7 @@ export default function App() {
   const [todos, setTodos] = useState([]);
   const [input, setInput] = useState("");
   const [filter, setFilter] = useState("all");
+  const [error, setError] = useState(""); // Added error state
 
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem("todos"));
@@ -17,7 +18,10 @@ export default function App() {
   }, [todos]);
 
   const addTodo = () => {
-    if (!input.trim()) return;
+    if (!input.trim()) {
+      setError("Please enter a task.");
+      return;
+    }
     const newTodo = {
       id: Date.now(),
       text: input,
@@ -25,6 +29,7 @@ export default function App() {
     };
     setTodos([...todos, newTodo]);
     setInput("");
+    setError(""); // Clear error after adding the todo
   };
 
   const deleteTodo = (id) => {
@@ -72,6 +77,9 @@ export default function App() {
           Add
         </button>
       </div>
+      {error && (
+        <p className="text-red-500 text-sm mb-4">{error}</p> // Display error message
+      )}
       <div className="flex gap-2 mb-4">
         <button
           className={`px-2 py-1 rounded ${filter === "all" ? "bg-rose-400 text-white" : "bg-gray-200 text-black"}`}
